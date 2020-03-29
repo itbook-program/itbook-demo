@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>布局基础</title>
+    <link rel="stylesheet" href="./reset.css">
+    <style>
+      html,body{
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        background-color: #EFF2F5;
+      }
+      .div-container{
+        display: flex;
+        box-sizing: border-box;
+      }
+      .sider-wrap{
+        width: 256px;
+        height: 100vh;
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        text-align: center;
+        box-shadow:2px 0px 6px 0px rgba(0,21,41,0.35);
+        margin-right: 6px;
+      }
+      .content-wrap{
+        flex: 1;
+        height: 100vh;
+      }
+      .content-wrap .banner{
+        height: 64px;
+        line-height: 64px;
+        text-align: center;
+        background-color: #fff;
+      }
+      .content-wrap .content{
+        margin: 8px 0;
+        height: calc(100vh - 160px);
+        background-color: #ffffff;
+        text-align: center;
+        display:-webkit-box;
+        -webkit-box-align:center;/* 垂直居中 */
+        -webkit-box-pack:center;/* 水平居中 */
+      }
+      .content-wrap .footer{
+        height: 80px;
+        background-color: #fff;
+        position: relative;
+      }
+      .footer-text{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform:translateY(-50%);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="div-container">
+      <div class="sider-wrap">
+        <div class="vertical-text">sidebar</div>
+      </div>
+      <div class="content-wrap">
+        <div class="banner">
+          banner
+        </div>
+        <div class="content">
+          content
+        </div>
+        <div class="footer">
+          <div class="footer-text">footer</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

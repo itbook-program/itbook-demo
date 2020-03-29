@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>瀑布流布局</title>
+  <style>
+    body,
+    html {
+      padding: 0;
+      margin: 0;
+    }
+
+    .items {
+      width: 100%;
+      position: relative;
+    }
+
+    .item {
+      z-index: 10;
+      transition: 0.25s;
+      overflow: hidden;
+      position: absolute;
+    }
+
+    .item img {
+      width: 100%;
+      height: 100%;
+      transition: 0.25s;
+    }
+
+    .item:hover img {
+      z-index: 100;
+      transition: 0.25s;
+      overflow: hidden;
+      animation: bounceIn 0.25s ease-in 2 alternate;
+    }
+
+    @keyframes bounceIn {
+      100% {
+        transform: scale(1.07);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="items">
+    <div class="item">
+      <img src="images/1.jpeg" alt="" />
+    </div>
+    <div class="item">
+      <img src="images/2.jpeg" alt="" />
+    </div>
+    <div class="item">
+      <img src="images/3.jpg" alt="" />
+    </div>
+    <div class="item">
+      <img src="images/4.jpeg" alt="" />
+    </div>
+    <div class="item">
+      <img src="images/1.jpeg" alt="" />
+    </div>
+    <div class="item">
+      <img src="images/2.jpeg" alt="" />
+    </div>
+    <div class="item">
+      <img src="images/3.jpg" alt="" />
+    </div>
+    <div class="item">
+      <img src="images/4.jpeg" alt="" />
+    </div>
+    <div class="item">
+      <img src="images/1.jpeg" alt="" />
+    </div>
+    <div class="item">
+      <img src="images/2.jpeg" alt="" />
+    </div>
+    <div class="item">
+      <img src="images/3.jpg" alt="" />
+    </div>
+    <div class="item">
+      <img src="images/4.jpeg" alt="" />
+    </div>
+    <div class="item">
+      <img src="images/1.jpeg" alt="" />
+    </div>
+    <div class="item">
+      <img src="images/2.jpeg" alt="" />
+    </div>
+    <div class="item">
+      <img src="images/3.jpg" alt="" />
+    </div>
+    <div class="item">
+      <img src="images/4.jpeg" alt="" />
+    </div>
+    <div class="item">
+      <img src="images/1.jpeg" alt="" />
+    </div>
+    <div class="item">
+      <img src="images/2.jpeg" alt="" />
+    </div>
+    <div class="item">
+      <img src="images/3.jpg" alt="" />
+    </div>
+    <div class="item">
+      <img src="images/4.jpeg" alt="" />
+    </div>
+  </div>
+</body>
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script>
+  //clientWidth 处理兼容性
+  function getClient() {
+    return {
+      width: window.innerWidth ||
+        document.documentElement.clientWidth ||
+        document.body.clientWidth,
+      height: window.innerHeight ||
+        document.documentElement.clientHeight ||
+        document.body.clientHeight
+    }
+  }
+
+  function init() {
+    const imageWidth = getClient().width - 20
+    const arr = []
+    const columns = 3
+    const itemWidth = parseInt(imageWidth / columns)
+    const itemPadding = 10
+    $('.items .item').each(function (i, item) {
+      $(this).css({
+        width: itemWidth
+      })
+      const height = $(this)
+        .find('img')
+        .height()
+      const width = $(this)
+        .find('img')
+        .width()
+      const bi = itemWidth / width
+      const boxheight = parseInt(height * bi)
+      if (i < columns) {
+        $(this).css({
+          top: 0,
+          left: itemWidth * i + itemPadding * i
+        })
+        arr.push(boxheight)
+      } else {
+        let minHeight = arr[0]
+        let index = 0
+        for (let j = 0; j < arr.length; j++) {
+          if (minHeight > arr[j]) {
+            minHeight = arr[j]
+            index = j
+          }
+        }
+
+        $(this).css({
+          top: arr[index] + itemPadding,
+          left: $('.items .item')
+            .eq(index)
+            .css('left')
+        })
+        arr[index] = arr[index] + boxheight + itemPadding
+      }
+    })
+  }
+  window.onresize = function () {
+    init()
+  }
+  window.onload = function () {
+    init()
+  }
+</script>
+
+</html>

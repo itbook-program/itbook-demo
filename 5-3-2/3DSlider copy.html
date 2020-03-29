@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>3D轮播图-优化</title>
+  <style>
+    html,
+    body {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .btn-wrap {
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .slider-container {
+      width: 1000px;
+      height: 250px;
+      margin: 0 auto;
+      perspective: 1000px;
+      overflow: hidden;
+      padding: 2% 0;
+    }
+
+    .slider-wrap {
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      background-color: #fff;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+    }
+
+    .slider-item {
+      width: 400px;
+      height: 100%;
+      z-index: 1;
+      position: absolute;
+      transition: transform .4s ease-in-out;
+      left: 0;
+      top: 0;
+    }
+
+    .slider-item img {
+      width: 100%;
+      height: 100%;
+    }
+
+    .item-content {
+      z-index: 99;
+    }
+
+    .item-prev {
+      left: 0;
+      z-index: 9;
+    }
+
+    .item-next {
+      right: 0% !important;
+      z-index: 9;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <div class="btn-wrap">
+      <button type="submit" @click="prevHandle">上一页</button>
+      <button type="submit" @click="nextHandle">下一页</button>
+    </div>
+    <div class="slider-container">
+      <div class="slider-wrap">
+        <div v-for="(item, index) in sliderData" :key="index" :style="setItemStyle(item, index)" class="slider-item">
+          <img :src="item.path">
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script>
+  function throttle(fn, threshhold) {
+    // 记录上次执行的时间
+    var last
+    // 定时器
+    var timer
+    // 默认间隔为 250ms
+    threshhold || (threshhold = 250)
+    // 返回的函数，每过 threshhold 毫秒就执行一次 fn 函数
+    return function () {
+      // 保存函数调用时的上下文和参数，传递给 fn
+      var context = this
+      var args = arguments
+      var now = +new Date()
+      // 如果距离上次执行 fn 函数的时间小于 threshhold，那么就放弃
+      // 执行 fn，并重新计时
+      if (last && now < last + threshhold) {
+        clearTimeout(timer)
+        // 保证在当前时间区间结束后，再执行一次 fn
+        timer = setTimeout(function () {
+          last = now
+          fn.apply(context, args)
+        }, threshhold)
+        // 在时间区间的最开始和到达指定间隔的时候执行一次 fn
+      } else {
+        last = now
+        fn.apply(context, args)
+      }
+    }
+  }
+  new Vue({
+    el: '#app',
+    data: {
+      currentLen: 0,
+      sliderData: [{
+        key: 0,
+        path: './imgs/1.jpg'
+      }, {
+        key: 1,
+        path: './imgs/2.jpg'
+      }, {
+        key: 2,
+        path: './imgs/3.jpg'
+      }, {
+        key: 3,
+        path: './imgs/4.jpg'
+      }, {
+        key: 4,
+        path: './imgs/5.jpg'
+      }, {
+        key: 5,
+        path: './imgs/6.jpg'
+      }]
+    },
+    methods: {
+      setItemStyle(item, index) {
+        // 申明左侧第一张图片的位置信息，基准值为初始化为0的currentLen字段，
+        // 如果大于0则减1，如果小于0，则取数组最后1位数据
+        const prevLen = this.currentLen - 1 >= 0 ? this.currentLen - 1 : this.sliderData.length - 1
+        // 申明左侧第二张图片的位置信息，计算方法与第一张图片类似，计算的基准值为第一张图片位置
+        const prevSecLen = prevLen - 1 >= 0 ? prevLen - 1 : this.sliderData.length - 1
+        // 申明右侧第一张图片的位置信息
+        const nextLen = this.currentLen + 1 > this.sliderData.length - 1 ? 0 : this.currentLen + 1
+        // 申明右侧第二张图片的位置信息
+        const nextSecLen = nextLen + 1 > this.sliderData.length - 1 ? 0 : nextLen + 1
+
+        if (this.currentLen === index) {
+          return {
+            transform: `translateX(300px) scale(1.2)`,
+            'z-index': 99
+          }
+        } else if (prevLen === index) {
+          const flag = index - this.currentLen
+          return {
+            transform: `translateX(0)`,
+            'z-index': 9
+          }
+        } else if (prevSecLen === index) {
+          return {
+            transform: `translateX(-400px)`,
+            'z-index': 6
+          }
+        } else if (nextLen === index) {
+          return {
+            transform: `translateX(600px)`,
+            'z-index': 9
+          }
+        } else if (nextSecLen === index) {
+          return {
+            transform: `translateX(1000px)`,
+            'z-index': 1
+          }
+        } else {
+          // 除开5张控制位置的图片，剩余图片通过opacity属性隐藏，
+          // 并且设置层级最低
+          const flag = index - this.currentLen
+          return {
+            opacity: 0,
+            'z-index': -1
+          }
+        }
+      },
+      prevHandle: throttle(function () {
+        if (this.currentLen <= 0) {
+          this.currentLen = this.sliderData.length - 1
+        } else {
+          this.currentLen = this.currentLen - 1
+        }
+      }, 600),
+      nextHandle: throttle(function () {
+        if (this.currentLen >= this.sliderData.length - 1) {
+          this.currentLen = 0
+        } else {
+          this.currentLen = this.currentLen + 1
+        }
+      }, 600)
+    }
+  })
+</script>
+
+</html>

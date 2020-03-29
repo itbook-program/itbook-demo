@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>拖拽demo</title>
+    <style>
+      .wrap{
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+      }
+      .list-1{
+        width: 30%;
+        height: 50vh;
+        border: 1px solid rgba(0,0,0,0.1);
+      }
+      .list-2{
+        width: 30%;
+        height: 50vh;
+        border: 1px solid rgba(0,0,0,0.1);
+      }
+      .list-title{
+        text-align: center;
+        padding: 20px;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+      }
+      .todo{
+        padding: 10px 10px;
+        background-color: bisque;
+        box-shadow:2px 0px 6px 0px rgba(0,21,41,0.35);
+      }
+    </style>
+  </head>
+  <body>
+     <div class="wrap">
+        <div class="list-1" id="target-1">
+            <div class="list-title">未完成</div>
+            <div class="todo" draggable="true" id="todo-1">
+              完成家庭作业
+            </div>
+        </div>
+        <div class="list-2" id="target-2">
+          <div class="list-title">已完成</div>
+        </div>
+     </div>
+  <script>
+    window.onload = function(){
+      var source = document.getElementById('todo-1');
+      var target1 = document.getElementById('target-1');
+      var target2 = document.getElementById('target-2');
+      source.ondragstart = function(event){
+        var e = event || window.event
+        console.log('开始拖拽');
+        e.dataTransfer.setData('text',e.target.id);
+      }
+      target1.ondragenter = function(){
+        console.log('进入未完成元素内')
+      }
+      target1.ondragover = function(event){
+        var event = event || window.event;
+        console.log('在未完成元素中拖拽');
+        event.preventDefault()
+      }
+      target1.ondragleave = function(){
+        console.log('拖放离开未完成元素')
+      }
+      target1.ondrop = function(event){
+        console.log('放入未完成');
+        var e = event || window.event
+        var data = e.dataTransfer.getData('text');
+        e.target.appendChild(document.getElementById(data));
+      }
+
+      target2.ondragenter = function(){
+        console.log('进入已完成元素内')
+      }
+      target2.ondragover = function(event){
+        var event = event || window.event;
+        console.log('在已完成元素中拖拽');
+        event.preventDefault()
+      }
+      target2.ondragleave = function(){
+        console.log('拖放离开已完成元素')
+      }
+      target2.ondrop = function(event){
+        console.log('放入已完成');
+        var e = event || window.event
+        var data = e.dataTransfer.getData('text');
+        e.target.appendChild(document.getElementById(data));
+      }
+    }
+  </script>
+  </body>
+</html>

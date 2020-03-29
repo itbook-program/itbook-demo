@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>动画属性演示</title>
+    <style>
+      .animate-container{
+        width: 100px;
+        height: 100px;
+        background-color: aqua;
+        animation: widthmove 5s linear 1s 1 normal;
+      }
+      @keyframes widthmove
+      {
+        from { width: 100px; }
+        to { width: 500px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="animate-container"></div>
+  </body>
+</html>

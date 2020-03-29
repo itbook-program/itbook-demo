@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+	</head>
+	<style>
+		.page-container{
+			perspective: 800;
+			-webkit-perspective:800;
+			perspective-origin: 50% 50%;
+			-webkit-perspective-origin:50% 50%;
+			overflow: hidden;
+		}
+		
+		.page-wrap{
+			width: 400px;
+			height: 400px;
+			margin: 0 auto;
+			transform-style: preserve-3d;
+			-webkit-transform-style: preserve-3d;
+			position: relative;
+		}
+		.page{
+			width: 360px;
+			height: 360px;
+			padding: 20px;
+			background-color: black;
+			
+			color:white;
+			font-weight: bold;
+			font-size: 360px;
+			line-height: 360px;
+			text-align: center;
+			position: absolute;
+
+			transform-origin: bottom;
+			-webkit-transform-origin: bottom;
+			transition: transform 1s linear;
+			-webkit-transition: -webkit-transform 1s linear;
+		}
+
+		#page2, #page3, #page4, #page5, #page6{
+			transform: rotateX(90deg);
+			-webkit-transform: rotateX(90deg);
+		}
+		
+		.opera-container{
+			text-align: center;
+			margin: 40px auto;
+		}
+		
+	</style>
+	
+	<script type="text/javascript">
+		var curIndex = 1;
+		const MAX_NUM = 6;
+		const MIN_NUM = 1;
+		function next(){
+			if(curIndex == MAX_NUM)
+			return;
+
+			let curpage = document.getElementById("page"+curIndex);
+			curpage.style.webkitTransform = "rotateX(-90deg)";      //当前页面位置翻滚90deg
+			curIndex ++;
+
+			let nextPage = document.getElementById("page"+curIndex);
+			nextPage.style.webkitTransform = "rotateX(0deg)";		//翻滚后的页面调整角度为0deg
+		}
+		
+		function prav(){
+			if(curIndex == MIN_NUM)
+			return;
+
+			let curPage = document.getElementById("page"+curIndex);
+			curPage.style.webkitTransform = "rotateX(90deg)";
+			
+			curIndex --;
+			let pravPage = document.getElementById("page"+curIndex);
+			pravPage.style.webkitTransform = "rotateX(0deg)";
+		}
+	</script>
+	
+	
+	<body>
+		<div class="page-container">
+			<div class="page-wrap">
+				<div class="page" id="page1">1</div>
+				<div class="page" id="page2">2</div>
+				<div class="page" id="page3">3</div>
+				<div class="page" id="page4">4</div>
+				<div class="page" id="page5">5</div>
+				<div class="page" id="page6">6</div>
+			</div>
+		</div>
+		
+		<div class="opera-container">
+			<a href="javascript:next()">下一页</a> &nbsp;
+			<a href="javascript:prav()">上一页</a>
+		</div>
+	</body>
+</html>

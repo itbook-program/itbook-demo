@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>三行三列网格-百分比</title>
+    <style>
+      body,html{
+        height: 100%;
+      }
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(3, 33.33%); 
+        grid-template-rows: repeat(3, 33.33%); 
+        grid-template-rows: repeat(3, 20px);  
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grid-container"></div>
+  </body>
+</html>

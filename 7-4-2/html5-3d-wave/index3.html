@@ -1,0 +1,75 @@
+<!DOCTYPE html">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>3D粒子波浪动画DEMO演示</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<style>
+body{
+  background-color: #000000;
+  margin: 0px;
+  overflow: hidden;
+}
+</style>
+<body>
+<script type="text/javascript" src="js/three.min.js"></script>
+<script>
+  var container = document.createElement( 'div' );
+	document.body.appendChild( container );
+  // 初始化
+  var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
+  camera.position.y = 300;
+  camera.position.z = 1000;
+  var scene = new THREE.Scene();
+  var PI2 = Math.PI * 2;
+  var material = new THREE.ParticleCanvasMaterial({
+		color: 0xffffff,
+		program: function ( context ) {
+			context.beginPath();
+			context.arc( 0, 0, 1, 0, PI2, true );
+			context.fill();
+		}
+	});
+  var particles = new Array();
+  var i = 0;
+  var SEPARATION = 100, AMOUNTX = 50, AMOUNTY = 50;
+  var particle, count = 0;
+	for ( var ix = 0; ix < AMOUNTX; ix ++ ) {
+		for ( var iy = 0; iy < AMOUNTY; iy ++ ) {
+			particle = particles[ i ++ ] = new THREE.Particle( material );
+			particle.position.x = ix * SEPARATION - ( ( AMOUNTX * SEPARATION ) / 2 );
+			particle.position.z = iy * SEPARATION - ( ( AMOUNTY * SEPARATION ) / 2 );
+			scene.add( particle );
+		}
+	}
+
+  var renderer = new THREE.CanvasRenderer();
+  // 设置渲染器宽、高
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	// 添加到容器内
+	container.appendChild( renderer.domElement );
+
+  // renderer.render( scene, camera );
+  // render()
+  animate()
+
+function render() {
+	var i = 0;
+	for ( var ix = 0; ix < AMOUNTX; ix ++ ) {
+		for ( var iy = 0; iy < AMOUNTY; iy ++ ) {
+			particle = particles[ i++ ];
+			particle.position.y = ( Math.sin( ( ix + count ) * 0.3 ) * 50 ) + ( Math.sin( ( iy + count ) * 0.5 ) * 50 );
+			particle.scale.x = particle.scale.y = ( Math.sin( ( ix + count ) * 0.3 ) + 1 ) * 2 + ( Math.sin( ( iy + count ) * 0.5 ) + 1 ) * 2;
+		}
+	}
+	renderer.render( scene, camera );
+	count += 0.1;
+}
+
+// 执行动画渲染
+function animate() {
+	requestAnimationFrame( animate );
+	render();
+}
+</script>
+</body>
+</html>

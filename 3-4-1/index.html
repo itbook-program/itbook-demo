@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<title></title>
+		<script type="text/javascript" src="./js/flexible.js" ></script>
+		<style>
+			body,html{
+				background: rgba(255,255,255,1);
+			}
+			.content{
+				width: 80%;
+				margin: 0 auto;
+				background: rgba(255,255,255,1);
+			}
+			.avatar{
+				width: 100%;
+				height: 4.388888rem;
+				display: flex;
+				align-items: center;
+			}
+			.avatar_box{
+				height: 2.666667rem;
+				width: 2.666667rem;
+				border-radius: 90px;
+				margin: 0 auto;
+        background-color: #999;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+			}
+			.input{
+				display: flex;
+				justify-content:space-around;
+				flex-wrap: wrap;			
+				border-bottom: 1px solid rgba(240,240,240,1) !important;
+				margin-bottom: 0.555555rem;
+			}
+			.login_img{
+				width: 10%;
+				display: flex;
+				align-items: center;
+			}
+			.login_img >img{
+				width: 0.416666rem;
+				height: 0.416666rem;
+			}
+			.input_choose{
+				width: 90%;
+				border: none;
+				padding: 0.3rem 0;
+				font-size: 0.444444rem;
+				color: rgb(136,136,136);
+				margin-bottom: 0;
+        outline: none;
+			}
+			.btn-block{
+        background-color: rgb(27,130,209);
+				border-radius:42px;
+				color: rgb(255,255,255);
+        margin: .625rem 0;
+				font-size: 0.5rem;
+				padding: 12px 0;
+        width: 100%;
+        outline: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="content">
+			<div class="avatar">
+				<div class="avatar_box">LOGO</div>
+			</div>
+			<div class="input phone">
+				<label class="login_img"><img src="./images/username.png" /></label>
+				<input type="text" class="input_choose" id="phone" placeholder="请输入手机号" />
+			</div>
+			<div class="input password">
+				<label class="login_img"><img src="./images/password.png" /></label>
+				<input type="password" class="input_choose" id="passwords" placeholder="请输入密码" />
+			</div>
+			<button type="button" class="btn-block">登录</button>
+		</div>
+	</body>
+
+</html>

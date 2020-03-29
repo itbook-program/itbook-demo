@@ -1,0 +1,205 @@
+<!DOCTYPE HTML5">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>HTML5 3D 粒子波浪动画特效DEMO演示</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+<style>
+body{background-color: #000000;margin: 0px;overflow: hidden;}
+a{color:#0078ff;}
+</style>
+
+</head>
+<body>
+
+<script type="text/javascript" src="js/three.min.js"></script>
+<script type="text/javascript">
+var SEPARATION = 100, AMOUNTX = 50, AMOUNTY = 50;
+
+var container;
+var camera, scene, renderer;
+
+var particles, particle, count = 0;
+
+var mouseX = 0, mouseY = 0;
+
+var windowHalfX = window.innerWidth / 2;
+var windowHalfY = window.innerHeight / 2;
+
+init();
+animate();
+
+function init() {
+
+	container = document.createElement( 'div' );
+	document.body.appendChild( container );
+	// 透视投影照相机
+	/**
+	 * 相机参数：
+	 * fov是视景体竖直方向上的张角（是角度制而非弧度制），如侧视图所示。
+	 * aspect等于width / height，是照相机水平方向和竖直方向长度的比值，通常设为Canvas的横纵比例。
+	 * near照相机到视景体最近的距离，为正值。
+	 * far照相机到视景体最远的距离，为正值。
+	*/
+	camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
+
+	// 设置相机位置,默认位置为:0,0,0. 
+	camera.position.z = 1000;
+
+	// 对象又是被称为场景图，它不仅仅是一个对象数组，还包含了整个场景图树形结构中的所有节点：
+	scene = new THREE.Scene();
+
+	// 存储粒子的数组
+	particles = new Array();
+
+	// Math.PI = 3.14 = 180°
+	var PI2 = Math.PI * 2;
+
+	// 制作一个粒子材质并通过我们定义的颜色和自定义粒子渲染功能。
+	var material = new THREE.ParticleCanvasMaterial({
+		color: 0xffffff,
+		program: function ( context ) {
+			context.beginPath();
+			context.arc( 0, 0, 1, 0, PI2, true );
+			context.fill();
+		}
+	});
+
+	var i = 0;
+
+	for ( var ix = 0; ix < AMOUNTX; ix ++ ) {
+
+		for ( var iy = 0; iy < AMOUNTY; iy ++ ) {
+			//生成粒子
+			particle = particles[ i ++ ] = new THREE.Particle( material );
+			// 0 * 100 - ( 50 * 100 ) /2
+			// 调整x轴 z轴位置，并且加入场景内
+			particle.position.x = ix * SEPARATION - ( ( AMOUNTX * SEPARATION ) / 2 );
+			particle.position.z = iy * SEPARATION - ( ( AMOUNTY * SEPARATION ) / 2 );
+			scene.add( particle );
+
+		}
+
+	}
+	// 生成渲染器的对象
+	renderer = new THREE.CanvasRenderer();
+	// 设置渲染器宽、高
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	// 添加到容器内
+	container.appendChild( renderer.domElement );
+
+	// 鼠标移动事件
+	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+	// 鼠标按中事件
+	document.addEventListener( 'touchstart', onDocumentTouchStart, false );
+	// 取消点击事件
+	document.addEventListener( 'touchmove', onDocumentTouchMove, false );
+
+	//页面调整大小事件
+	window.addEventListener( 'resize', onWindowResize, false );
+
+}
+// 调整页面大小时，触发此方法
+function onWindowResize() {
+	// 获取中心点
+	windowHalfX = window.innerWidth / 2;
+	windowHalfY = window.innerHeight / 2;
+
+	//宽高比
+	camera.aspect = window.innerWidth / window.innerHeight;
+	camera.updateProjectionMatrix();
+
+	//重绘渲染条
+	renderer.setSize( window.innerWidth, window.innerHeight );
+
+}
+
+// 鼠标移动事件
+function onDocumentMouseMove( event ) {
+	// 在X轴方向，鼠标位置与中心点的位移差
+	mouseX = event.clientX - windowHalfX;
+	// 在Y轴方向，鼠标位置与中心点的位移差
+	mouseY = event.clientY - windowHalfY;
+
+}
+
+// 鼠标点中事件
+function onDocumentTouchStart( event ) {
+	console.log('没有触发额', event)
+	// 该TouchEvent.touches 属性是一个 TouchList 对象，并包含 Touch 当前接触表面的每个接触点的对象列表。
+	if ( event.touches.length === 1 ) {
+
+		event.preventDefault();
+
+		mouseX = event.touches[ 0 ].pageX - windowHalfX;
+		mouseY = event.touches[ 0 ].pageY - windowHalfY;
+
+	}
+
+}
+// 鼠标取消按住状态事件
+function onDocumentTouchMove( event ) {
+	console.log('触发', event)
+	if ( event.touches.length === 1 ) {
+
+		event.preventDefault();
+
+		mouseX = event.touches[ 0 ].pageX - windowHalfX;
+		mouseY = event.touches[ 0 ].pageY - windowHalfY;
+
+	}
+
+}
+
+// 执行动画渲染
+function animate() {
+	// window.requestAnimationFrame() 告诉浏览器——你希望执行一个动画，
+	// 并且要求浏览器在下次重绘之前调用指定的回调函数更新动画。该方法需要传入一个回调函数作为参数，
+	// 该回调函数会在浏览器下一次重绘之前执行
+	//  它自动紧跟浏览器的绘制的帧率（一般浏览器的显示帧率是60fps，差不多每帧间隔16.7ms）
+	// 在隐藏或不可见的元素中将不会进行重绘或回流，大大降低了开销。
+	requestAnimationFrame( animate );
+
+	render();
+
+
+}
+
+function render() {
+	// 调整相机参数，通过鼠标坐标点，减去相机位置
+	camera.position.x += ( mouseX - camera.position.x ) * .05;
+	camera.position.y += ( - mouseY - camera.position.y ) * .05;
+	// 默认情况下 相机的位置由+Z看向-z，通过lookAt方法，调整相机默认位置，实现场景的上下，左右移动效果
+	// https://www.cnblogs.com/v-weiwang/p/6072235.html
+	camera.lookAt( scene.position );
+
+	var i = 0;
+
+	for ( var ix = 0; ix < AMOUNTX; ix ++ ) {
+
+		for ( var iy = 0; iy < AMOUNTY; iy ++ ) {
+			// 拿出每一颗粒子
+			particle = particles[ i++ ];
+			// 调整粒子的y轴位置 count的目的是为了让每个粒子比上一个粒子的位置高，相当于让每一个粒子在y轴上上下画sin轨迹
+			particle.position.y = ( Math.sin( ( ix + count ) * 0.3 ) * 50 ) + ( Math.sin( ( iy + count ) * 0.5 ) * 50 );
+			// 调整粒子的大小
+			particle.scale.x = particle.scale.y = ( Math.sin( ( ix + count ) * 0.3 ) + 1 ) * 2 + ( Math.sin( ( iy + count ) * 0.5 ) + 1 ) * 2;
+
+		}
+
+	}
+
+	//渲染器渲染 scene场景 和 camera 相机
+	renderer.render( scene, camera );
+
+	count += 0.1;
+
+}
+</script>
+
+<div style="text-align:center;margin:1px 0; font:normal 14px/24px 'MicroSoft YaHei';color:#ffffff">
+<p>适用浏览器：360、FireFox、Chrome、Safari、Opera、傲游、搜狗、世界之窗. 不支持IE8及以下浏览器。</p>
+<p>来源：<a href="http://sc.chinaz.com/" target="_blank">站长素材</a></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>touch长按事件</title>
+  <style>
+    .container {
+      position: relative;
+      text-align: center;
+    }
+
+    .contain-touch {
+      width: 105px;
+      height: 32px;
+      margin: 30px auto;
+      line-height: 32px;
+      background: linear-gradient(blue, pink);
+      color: #ffffff;
+      text-align: center;
+      border-radius: 3px;
+      font-size: 14px;
+    }
+
+    .contain-touch.selected {
+      background-color: #4180cc;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="contain-touch" id="touch">长按弹框</div>
+  </div>
+</body>
+<script>
+  let timer = null
+  let startTime, endTime = ''
+  const touchBtn = document.getElementById('touch')
+
+  touchBtn.addEventListener('touchstart', function () {
+    // 使用  '+'  号，这个操作是将该元素转换成Number类型
+    // +new Date() 将会调用 Date.prototype 上的 valueOf() 方法
+    startTime = +new Date()
+    timer = setTimeout(function () {
+      alert('您已触发长按事件')
+    }, 700)
+  })
+
+  touchBtn.addEventListener('touchend', function () {
+    endTime = +new Date()
+    clearTimeout(timer)
+    // 点击事件
+    if (endTime - startTime < 700) {
+      alert('您已触发点击事件')
+    }
+  })
+</script>
+
+</html>
